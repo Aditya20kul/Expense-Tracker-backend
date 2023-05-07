@@ -1,21 +1,46 @@
 package com.aditya20kul.expenseapp.models;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.aditya20kul.expenseapp.enums.CategoryEnum;
+import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.data.annotation.LastModifiedDate;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.Date;
+import java.util.List;
 
-@Data
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
+@Getter
+@Setter
+@Table(name="expenses")
 public class Expense {
-    private UUID expenseId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
+
     private String expenseTitle;
     private String expenseDescription;
     private double amount;
-    private LocalDateTime expenseDate;
+    private LocalDate expenseDate;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "CategoryEnum", joinColumns = @JoinColumn(name = "id"))
+    @Enumerated(EnumType.STRING)
+    private List<CategoryEnum> expenseCategory;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+//    @LastModifiedDate
+//    private LocalDateTime lastModified;
 }
